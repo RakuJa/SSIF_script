@@ -23,7 +23,7 @@ if __name__ == "__main__":
         if keep_taking_input:
             file_list.append(file_name)
             
-    to_search = "Nome:Cognome"
+    to_search = input("Enter string to search")
     print ("\n Search started.... \n")
     for file_name in file_list:
         print("\n Starting search in " + file_name + "\n")
