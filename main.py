@@ -104,6 +104,8 @@ if __name__ == "__main__":
     
     if write_to_file:
         write_info_to_file(prepare_string, flattened_list)
+
+    input(" Enter something to close the script ")
         
         
 
