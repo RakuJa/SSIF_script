@@ -62,7 +62,8 @@ def print_tutorial():
     while (True):
         answer = input("Y/N")
         if answer == "N":
-            exit()
+            os.startfile(__file__)
+            sys.exit()
         if answer == "Y":
             return;
           
@@ -105,7 +106,10 @@ if __name__ == "__main__":
     if write_to_file:
         write_info_to_file(prepare_string, flattened_list)
 
-    input(" Enter something to close the script ")
+    x = input(" Would you like to restart the script? Y/N")
+    if x=="Y" or x=="y":
+        os.startfile(__file__)
+        sys.exit()
         
         
 
