@@ -11,10 +11,11 @@ def check_file_validity(file_name) -> bool:
         return False
     with open(file_name, 'r', encoding='utf-8'):
         return True
-    
 
+def write_info_to_file() -> bool:
+    pass
 
-if __name__ == "__main__":
+def take_file_input() -> list:
     keep_taking_input = True
     file_list =[]
     while keep_taking_input:
@@ -22,7 +23,12 @@ if __name__ == "__main__":
         keep_taking_input = check_file_validity(file_name)
         if keep_taking_input:
             file_list.append(file_name)
-            
+    return file_list
+    
+    
+if __name__ == "__main__":
+    
+    file_list = take_file_input()        
     to_search = input("Enter string to search ")
     print ("\n Search started.... \n")
     occurrences_list = []
