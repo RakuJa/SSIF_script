@@ -1,3 +1,5 @@
+from itertools import chain
+
 def check(file_name, string_to_search) -> list:
     to_return = []
     with open(file_name, 'r', encoding='utf-8') as f:
@@ -12,9 +14,6 @@ def check_file_validity(file_name) -> bool:
     with open(file_name, 'r', encoding='utf-8'):
         return True
 
-def write_info_to_file() -> bool:
-    pass
-
 def take_file_input() -> list:
     keep_taking_input = True
     file_list =[]
@@ -24,11 +23,14 @@ def take_file_input() -> list:
         if keep_taking_input:
             file_list.append(file_name)
     return file_list
+
+def write_info_to_file() -> bool:
+    pass
     
     
 if __name__ == "__main__":
     
-    file_list = take_file_input()        
+    file_list = take_file_input()
     to_search = input("Enter string to search ")
     print ("\n Search started.... \n")
     occurrences_list = []
@@ -36,12 +38,14 @@ if __name__ == "__main__":
         print("\n Starting search in " + file_name + "\n")
         tmp = check(file_name, to_search)
         occurrences_list.append(tmp)
-        print(tmp)
         print("\n" + file_name + "Searched...." + "\n")
     print("\n" + "Search over........." + "\n")
 
-    print( "Found " + str(len(occurrences_list)) + " Occurances of string")
-    print(" \n Here's the list : \n")
-    print(occurrences_list)
+    print( "Found the string in " + str(len(occurrences_list)) + " files \n")
+    flattened_list = list(chain(*occurrences_list))
+    print("Found " + str(len(flattened_list)) + " occurrences of the string \n")
+
+    print("Here's the list \n")
+    print(*flattened_list, sep=' \n')
 
 
