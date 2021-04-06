@@ -1,4 +1,7 @@
 from itertools import chain
+import os
+from os import listdir
+from os.path import isfile, join
 
 def check(file_name, string_to_search) -> list:
     to_return = []
@@ -14,14 +17,22 @@ def check_file_validity(file_name) -> bool:
     with open(file_name, 'r', encoding='utf-8'):
         return True
 
+def take_all_files(mypath) -> list:
+    onlyfiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]
+    return onlyfiles
+
 def take_file_input() -> list:
     keep_taking_input = True
     file_list =[]
     while keep_taking_input:
         file_name = input("Enter file path, Empty line to stop input ")
-        keep_taking_input = check_file_validity(file_name)
-        if keep_taking_input:
-            file_list.append(file_name)
+        if file_name == "ALL":
+            file_list = take_all_files(os.getcwd())
+            
+        else :
+            keep_taking_input = check_file_validity(file_name)
+            if keep_taking_input:
+                file_list.append(file_name)
     return file_list
 
 def write_info_to_file() -> bool:
