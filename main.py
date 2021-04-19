@@ -15,7 +15,11 @@ def print_readme():
     from bs4 import BeautifulSoup
     
     html = markdown.markdown(open("readme.md").read())
-    print(BeautifulSoup(html, features="html.parser").findAll(text=True))
+    x = BeautifulSoup(html, features="html.parser").findAll(text=True)
+    print("\n")
+    for line in x:
+        print(line)
+    print("\n")
 
 def print_instructions():
     text = "[1] Read Me \n"+"[2] File merger \n"+"[3] Search string in file \n"+"[7] Credits  [8] Instructions  [9] Exit \n"
