@@ -1,5 +1,9 @@
-# SSIF_script
+# SADA_suite
 
 ## ENG
 
-This python script allows users to search inside given files a given string and display all the info related to the research
+Python script suite, for now it offers SSIF(txt, pdf) and PdF merger
+
+## IT
+
+Python script suite, offre la funzionalità di ricerca di stringhe nei file per pdf e txt e un merger dei pdf
