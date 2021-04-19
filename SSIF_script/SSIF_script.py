@@ -6,6 +6,14 @@ from os import listdir
 from os.path import isfile, join
 from contextlib import redirect_stdout
 
+def bordered(text):
+    lines = text.splitlines()
+    width = max(len(s) for s in lines)
+    res = ['┌' + '─' * width + '┐']
+    for s in lines:
+        res.append('│' + (s + ' ' * width)[:width] + '│')
+    res.append('└' + '─' * width + '┘')
+    return '\n'.join(res)
 
 def pdf_to_text(file_name) -> str:
     from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
@@ -98,30 +106,34 @@ def write_info_to_file(info_string, flattened_list,file_name = "results.txt", se
         print(*flattened_list, sep=separator, file=f)
 
 def print_tutorial():
-    print("This script will search for a string inside a list of files (1..n) \n")
-    print("You will be asked to input firstly the option (this field can be empty) \n")
-    print("Options list: \n")
-    print("-v will set verbose option on, this will make the script print a lot more, it will make " +\
-          "you understand more how much you have scanned and what \n")
-    print("-f will print the output of the script to a file named results.txt \n")
-    print("-h will display the help option, this wall of text \n")
+    text = open("tutorial.txt").read()
+    print(bordered(text))
 
-    print("Do you wish to continue the execution with the option you have already inputted? \n")
-    while (True):
-        answer = input("Y/N")
-        if answer == "N":
-            os.startfile(__file__)
-            sys.exit()
-        if answer == "Y":
-            return;
+def print_instructions():
+    text = "[1] Tutorial \n"+"[2] Continua esecuzione \n"+"[7] Credits   [9] Exit \n"
+    print(bordered(text))
+
+def require_input():
+    choice = input("Enter Your Choice in the Keyboard [1,2,7,9] : ")
+    return choice.upper()
             
     
 if __name__ == "__main__":
 
-    options = input("Enter options like this : -h -v -f or press enter")
+    print_instructions()
+    keep_asking_input=True
+    while(keep_asking_input):
+        choice = require_input()
+        if choice=='1' or choice=='TUTORIAL':
+            print_tutorial()
+        elif choice=='2' or choice=='CONTINUE':
+            keep_asking_input=False
+        elif choice=='7' or choice=='CREDITS':
+            print("https://github.com/RakuJa")
+        elif choice=='9' or choice=='EXIT':
+            sys.exit()
 
-    if options.find('-h') != -1:
-        print_tutorial()
+    options = input("Enter options like this : -v -f or press enter")
 
     write_to_file = options.find('-f') != -1
     
