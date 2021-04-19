@@ -26,7 +26,7 @@ def print_instructions():
     print(bordered(text))
     
 def require_input():
-    choice = input("Enter Your Choice in the Keyboard [1,2,3,7,9] : ")
+    choice = input("Enter Your Choice in the Keyboard [1,2,3,7,8,9] : ")
     return choice.upper()
 
 if __name__ == "__main__":
