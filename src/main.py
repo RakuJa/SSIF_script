@@ -2,6 +2,7 @@ import os
 import sys
 from file_merger import file_merger
 from SSIF_script import SSIF_script
+from web_scraper import github_contribution_scraper as github_contrib_counter
 import interface
 
 
@@ -18,9 +19,13 @@ def print_readme():
 
 
 def print_instructions():
-    text = "[1] Read Me \n" + "[2] File merger \n" + "[3] Search string in file \n" + "[7] Credits  [8] Instructions  " \
-                                                                                      "[9] " \
-                                                                                      "Exit \n "
+    text = "[1] Read Me \n" \
+           + "[2] File merger \n" \
+           + "[3] Search string in file \n" \
+           + "[4] Github contribution counter \n" \
+           + "[7] Credits" \
+           + "[8] Instructions  " \
+           + "[9] Exit \n "
     print(interface.bordered(text))
 
 
@@ -48,6 +53,8 @@ if __name__ == "__main__":
             file_merger.start()
         elif choice == '3' or choice == 'SSIF' or choice == 'SEARCH':
             SSIF_script.start()
+        elif choice == '4' or choice == 'CONTRIBUTION' or choice == 'GITHUB':
+            github_contrib_counter.start()
         elif choice == '7' or choice == 'CREDITS':
             print("https://github.com/RakuJa")
         elif choice == '8' or choice == 'INSTRUCTIONS':
