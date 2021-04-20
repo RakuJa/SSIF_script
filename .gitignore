@@ -1,2 +1,7 @@
 *.txt
 *.pdf
+
+# Pycham project ignore
+venv
+.idea
+SADA_suite
