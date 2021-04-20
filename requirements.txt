@@ -1,0 +1,4 @@
+Markdown==3.3.4
+bs4==0.0.1
+pdfminer==20191125
+PyPDF2==1.26.0

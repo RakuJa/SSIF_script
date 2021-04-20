@@ -9,7 +9,7 @@ def print_readme():
     import markdown
     from bs4 import BeautifulSoup
 
-    html = markdown.markdown(open("readme.md").read())
+    html = markdown.markdown(open("README.md").read())
     x = BeautifulSoup(html, features="html.parser").findAll(text=True)
     print("\n")
     for line in x:

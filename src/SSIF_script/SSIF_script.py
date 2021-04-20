@@ -3,9 +3,9 @@ from itertools import chain
 import os
 from os import listdir
 from os.path import isfile, join
-import interface
+from src import interface
 
-tutorial_name = os.path.join("SSIF_script", "tutorial.md")
+tutorial_name = "SSIF_tutorial.md"
 
 
 def pdf_to_text(file_name) -> str:
