@@ -1,5 +1,6 @@
-*.txt
 *.pdf
+*.pyc
+
 
 # Pycham project ignore
 venv
