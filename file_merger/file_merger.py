@@ -27,7 +27,7 @@ def take_file_input() -> list:
     file_list = remove_duplicates(file_list)
     return file_list
 
-if __name__ == "__main__":
+def start():
     file_list = take_file_input()
     merger = PdfFileMerger()
     for pdf in file_list:

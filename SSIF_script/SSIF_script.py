@@ -6,6 +6,8 @@ from os import listdir
 from os.path import isfile, join
 from contextlib import redirect_stdout
 
+tutorial_name = os.path.join("SSIF_script", "tutorial.md")
+
 def bordered(text):
     lines = text.splitlines()
     width = max(len(s) for s in lines)
@@ -106,7 +108,9 @@ def write_info_to_file(info_string, flattened_list,file_name = "results.txt", se
         print(*flattened_list, sep=separator, file=f)
 
 def print_tutorial():
-    text = open("tutorial.txt").read()
+    current_path = os.getcwd()
+    path_to_tutorial = os.path.join(current_path, tutorial_name)
+    text = open(path_to_tutorial).read()
     print(bordered(text))
 
 def print_instructions():
@@ -118,7 +122,7 @@ def require_input():
     return choice.upper()
             
     
-if __name__ == "__main__":
+def start():
 
     print_instructions()
     keep_asking_input=True

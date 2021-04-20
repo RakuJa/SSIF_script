@@ -1,5 +1,7 @@
 import os
 import sys
+from file_merger import file_merger
+from SSIF_script import SSIF_script
 
 def bordered(text):
     lines = text.splitlines()
@@ -45,11 +47,9 @@ if __name__ == "__main__":
         if choice=='1' or choice=='READ':
             print_readme()
         elif choice=='2' or choice=='MERGER':
-            os.startfile(file_merger_path)
-            sys.exit()
+            file_merger.start()
         elif choice=='3' or choice=='SSIF' or choice=='SEARCH':
-            os.startfile(ssif_path)
-            sys.exit()
+            SSIF_script.start()
         elif choice=='7' or choice=='CREDITS':
             print("https://github.com/RakuJa")
         elif choice=='8' or choice=='INSTRUCTIONS':
