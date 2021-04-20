@@ -7,15 +7,17 @@ def check_file_validity(file_name) -> bool:
         return True
     return False
 
+
 def remove_duplicates(list_to_clean_up) -> bool:
     clean_list = list(set(list_to_clean_up))
     for item in clean_list:
         check_file_validity(item)
     return clean_list
 
+
 def take_file_input() -> list:
     keep_taking_input = True
-    file_list =[]
+    file_list = []
     while keep_taking_input:
         file_name = input("Enter file path, Empty line to stop input ")
         if file_name == "ALL":
@@ -27,6 +29,7 @@ def take_file_input() -> list:
     file_list = remove_duplicates(file_list)
     return file_list
 
+
 def start():
     file_list = take_file_input()
     merger = PdfFileMerger()
@@ -34,4 +37,3 @@ def start():
         merger.append(pdf)
     merger.write("result.pdf")
     merger.close()
-
