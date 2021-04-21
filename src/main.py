@@ -32,7 +32,7 @@ def print_instructions():
 
 
 def require_input():
-    choice = input("Enter Your Choice in the Keyboard [1,2,3,7,8,9] : ")
+    choice = input("Enter Your Choice in the Keyboard [1,2,3,5,7,8,9] : ")
     return choice.upper()
 
 
@@ -57,7 +57,7 @@ if __name__ == "__main__":
             SSIF_script.start()
         elif choice == '4' or choice == 'CONTRIBUTION' or choice == 'GITHUB':
             github_contrib_counter.start()
-        elif choice == '5':
+        elif choice == '5' or choice == 'AMAZON':
             amazon_product_search.start()
         elif choice == '7' or choice == 'CREDITS':
             print("https://github.com/RakuJa")

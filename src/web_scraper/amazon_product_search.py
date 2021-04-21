@@ -15,6 +15,8 @@ import certifi
 
 BASE_URL_LIST = ['https://www.amazon.it/s?k=']
 os.environ['REQUESTS_CA_BUNDLE'] = certifi.where()
+BOT_BLACKLISTED = ["To discuss automated access to Amazon data please contact",
+                   "For automated access to price change or offer listing change events"]
 
 
 def check_status(page):
@@ -28,14 +30,18 @@ def check_status(page):
     if page is None:
         return False
     if page.status_code == 200:
-        # 200 = ok, Profile found
-        print("Search found, extrapolating content.. \n")
-        return True
+        # 200 = ok but that doesn't mean that i'm done
+        if BOT_BLACKLISTED[1] in page.text:
+            print("You got marked as a bot and returned a captcha!")
+            return False
+        else:
+            print("Search found, extrapolating content.. \n")
+            return True
     if page.status_code == 404:
         print("Error..  \n")
         return False
     if page.status_code > 500:
-        if "To discuss automated access to Amazon data please contact" in page.text:
+        if BOT_BLACKLISTED[0] in page.text:
             print("Page was blocked by Amazon. You got marked as a bot\n")
             return False
         else:
@@ -103,17 +109,26 @@ def start():
         page = download_page(full_url)
         print(page)
         soup = BeautifulSoup(page.content, 'html.parser')   # This will contain the html page
-        # div will contain the parsed page with only the selected div (sg-col-inner)
-        # div = soup.findAll('div', {"class": 'sg-col-inner'})
 
-        span_found = soup.findAll("span", {"class": "a-size-base-plus a-color-base a-text-normal"})
-        print(span_found)
+        item_found = soup.findAll("span", {"class": "a-size-base-plus a-color-base a-text-normal"})
+        price_found = soup.findAll("span", {"class": "a-price-whole"})
+        currency_found = soup.findAll("span",{"class": "a-price-symbol"})
+        print("\n")
         product_found_list = []
-        #print(div)
-        for i in span_found:
-            product_found_list.append(i.get_text())
+        item_dictionary={}
+        for (curr_name, curr_price, curr_currency) in zip(item_found, price_found, currency_found):
+            #product_found_list.append()
+            name = curr_name.get_text()
+            price = curr_price.get_text()
+            currency = curr_currency.get_text()
+            item_dictionary[name] = [price, currency]
+            # print(name + " : " + price + " " + currency)
 
-        print(product_found_list)
+        for amazon_item in item_dictionary:
+            tmp_vector = item_dictionary[amazon_item]
+            currency = tmp_vector.pop()
+            price = tmp_vector.pop()
+            print(amazon_item + " : " + price + " " + currency)
         user_input = input("Search for another product? Y/N : ")
         if user_input.upper() == "N":
             sys.exit()
