@@ -37,5 +37,5 @@ def start():
             print(remaining_element)
 
         user_input = input("Search for another user contributions? Y/N : ")
-        if user_input == "N":
+        if user_input.upper() == "N":
             sys.exit()

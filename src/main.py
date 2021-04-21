@@ -2,7 +2,8 @@ import os
 import sys
 from file_merger import file_merger
 from SSIF_script import SSIF_script
-from web_scraper import github_contribution_scraper as github_contrib_counter
+from src.web_scraper import amazon_product_search
+from web_scraper import github_contribution_counter as github_contrib_counter
 import interface
 
 
@@ -23,6 +24,7 @@ def print_instructions():
            + "[2] File merger \n" \
            + "[3] Search string in file \n" \
            + "[4] Github contribution counter \n" \
+           + "[5] Amazon product finder \n" \
            + "[7] Credits" \
            + "[8] Instructions  " \
            + "[9] Exit \n "
@@ -55,6 +57,8 @@ if __name__ == "__main__":
             SSIF_script.start()
         elif choice == '4' or choice == 'CONTRIBUTION' or choice == 'GITHUB':
             github_contrib_counter.start()
+        elif choice == '5':
+            amazon_product_search.start()
         elif choice == '7' or choice == 'CREDITS':
             print("https://github.com/RakuJa")
         elif choice == '8' or choice == 'INSTRUCTIONS':
