@@ -101,7 +101,7 @@ def download_page(url) -> requests.models.Response:
             if response_page is not None:
                 return response_page
             else:
-                print("Cannot connect... scraping a new proxy list..")
+                print("Cannot connect... scraping a new proxy list...")
                 time.sleep(WAIT_BETWEEN_PROXY_SCRAPING)
         except Exception as e:
             print(e)
