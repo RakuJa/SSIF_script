@@ -1,16 +1,18 @@
 import os
 import sys
+import time
 
 import requests
 from bs4 import BeautifulSoup
 
 FOLDER = "data"
-# BASE_URL = 'https://www.math.unipd.it/~rcardin/sweb/2021/'
+
 BASE_URL = 'https://www.math.unipd.it/'
 REMOTE_FILE_PATH = os.path.join(FOLDER, "temp.ignore")
 
 
 def start():
+    minutes_to_wait = 0
     site = input("Input full url: ")
 
     if site is None or site == "":
@@ -21,6 +23,10 @@ def start():
     local_file_path = os.path.join(FOLDER, local_file_name)
 
     ask_update_or_create_local_file(local_file_path)
+
+    keep_searching = input("Do you want to keep searching for differences every n minutes? Y/N :")
+    if keep_searching.upper() == "Y":
+        minutes_to_wait = int(input("Enter a number for the minutes to wait for update: "))
 
     while True:
 
@@ -54,9 +60,14 @@ def start():
                 with open(local_file_path, "w") as f:
                     f.write(remote_site)
 
-        user_input = input("Search again? Y/N : ")
-        if user_input.upper() == "N":
-            sys.exit()
+        if minutes_to_wait != 0:
+            seconds = minutes_to_wait*60
+            print("Waiting %s seconds before next iteration" % seconds)
+            time.sleep(seconds)
+        else:
+            user_input = input("Search again? Y/N : ")
+            if user_input.upper() == "N":
+                sys.exit()
 
 
 def ask_update_or_create_local_file(local_file_path: str) -> None:
