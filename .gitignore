@@ -1,6 +1,6 @@
 *.pdf
 *.pyc
-
+*.ignore
 
 # Pycham project ignore
 venv

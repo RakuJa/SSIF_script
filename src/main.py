@@ -2,7 +2,7 @@ import os
 import sys
 from file_merger import file_merger
 from SSIF_script import SSIF_script
-from src.web_scraper import amazon_product_search
+from src.web_scraper import amazon_product_search, check_site_differences
 from web_scraper import github_contribution_counter as github_contrib_counter
 import interface
 
@@ -25,6 +25,7 @@ def print_instructions():
            + "[3] Search string in file \n" \
            + "[4] Github contribution counter \n" \
            + "[5] Amazon product finder \n" \
+           + "[6] Site differences \n" \
            + "[7] Credits" \
            + "[8] Instructions  " \
            + "[9] Exit \n "
@@ -32,7 +33,7 @@ def print_instructions():
 
 
 def require_input():
-    choice = input("Enter Your Choice in the Keyboard [1,2,3,5,7,8,9] : ")
+    choice = input("Enter Your Choice in the Keyboard [1,2,3,5,6,7,8,9] : ")
     return choice.upper()
 
 
@@ -59,6 +60,8 @@ if __name__ == "__main__":
             github_contrib_counter.start()
         elif choice == '5' or choice == 'AMAZON':
             amazon_product_search.start()
+        elif choice == '6':
+            check_site_differences.start()
         elif choice == '7' or choice == 'CREDITS':
             print("https://github.com/RakuJa")
         elif choice == '8' or choice == 'INSTRUCTIONS':
