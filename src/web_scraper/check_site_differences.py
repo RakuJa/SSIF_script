@@ -6,9 +6,10 @@ import requests
 from bs4 import BeautifulSoup
 
 FOLDER = "data"
-
 BASE_URL = 'https://www.math.unipd.it/'
 REMOTE_FILE_PATH = os.path.join(FOLDER, "temp.ignore")
+BLACKLIST_PATH_CHAR = ['*', '.', '/', '\'', '[', ']', ':', ';', '|', ',', '<', '>']
+WHITELISTED_CHAR = "_"
 
 
 def start():
@@ -17,9 +18,16 @@ def start():
 
     if site is None or site == "":
         site = BASE_URL
+    local_file_name = site
 
-    local_file_name = site.replace("/", "|")
+    # Remove every char that might not work in certain os (coff coff windows)
+    for forbidden_char in BLACKLIST_PATH_CHAR:
+        local_file_name = local_file_name.replace(forbidden_char, WHITELISTED_CHAR)
+
+    # Add file extension
     local_file_name = local_file_name + ".ignore"
+
+    # Create valid path to folder
     local_file_path = os.path.join(FOLDER, local_file_name)
 
     ask_update_or_create_local_file(local_file_path)
