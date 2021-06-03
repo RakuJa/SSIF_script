@@ -3,8 +3,8 @@ bs4==0.0.1
 pdfminer==20191125
 PyPDF2==1.26.0
 requests==2.25.1
-selectorlib=0.16.0
+selectorlib==0.16.0
 beautifulsoup4~=4.9.3
 lxml~=4.6.3
-urllib3==1.25.11
+urllib3>=1.26.5
 requests-random-user-agent==2021.4.10
