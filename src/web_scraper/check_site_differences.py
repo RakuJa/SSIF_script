@@ -29,15 +29,24 @@ def start():
 
     # Create valid path to folder
     local_file_path = os.path.join(FOLDER, local_file_name)
-
-    ask_update_or_create_local_file(local_file_path)
-
+    try:
+        default_folder_setup(local_file_path)
+    except (OSError, NotADirectoryError) as e:
+        print(e)
     keep_searching = input("Do you want to keep searching for differences every n minutes? Y/N :")
     if keep_searching.upper() == "Y":
         minutes_to_wait = int(input("Enter a number for the minutes to wait for update: "))
 
     while True:
-
+        # Be sure that data folder is setup
+        try:
+            default_folder_setup(local_file_path)
+        except (OSError, NotADirectoryError) as e:
+            print(e)
+            input("Exception encountered... press Enter to retry to execution")
+            continue
+        # End of data folder checks and/or creation
+        
         page = requests.get(site)
 
         print(page.status_code)
@@ -70,24 +79,12 @@ def start():
 
         if minutes_to_wait != 0:
             seconds = minutes_to_wait*60
-            print("Waiting %s seconds before next iteration" % seconds)
+            print("Waiting %s minutes before next iteration" % seconds)
             time.sleep(seconds)
         else:
             user_input = input("Search again? Y/N : ")
             if user_input.upper() == "N":
                 sys.exit()
-
-
-def ask_update_or_create_local_file(local_file_path: str) -> None:
-    if os.path.exists(local_file_path) and os.path.isfile(local_file_path):
-        if os.stat(local_file_path).st_size != 0:
-            need_update_local = input("Update site local version? Y/N : ")
-            if need_update_local.upper() == "Y":
-                with open(local_file_path, "w") as f:
-                    f.close()
-    else:
-        with open(local_file_path, "w") as f:
-            f.close()
 
 
 def check_file_diff(first_file: str, second_file: str) -> str:
@@ -98,3 +95,24 @@ def check_file_diff(first_file: str, second_file: str) -> str:
     diff.discard('\n')
     diff = ", ".join(diff)
     return diff
+
+def default_folder_setup(local_file_path: str) -> None:
+    if os.path.isfile(FOLDER):
+        try:
+            os.remove(FOLDER)
+        except OSError:
+            print("Could not delete data file")
+            raise NotADirectoryError("Default data path already exists as a file and we encountered errors while deleting it, delete it!")
+    if not os.path.exists(FOLDER):
+        try:
+            os.mkdir(FOLDER)
+        except OSError:
+            print ("Creation of the directory has failed")
+            raise OSError("Creation of default data directory has failed")
+    # If path is a directory i delete it
+    if os.path.exists(local_file_path) and not os.path.isfile(local_file_path):
+        os.rmdir(local_file_path)
+    if not os.path.exists(local_file_path):
+        with open(local_file_path, "w") as f:
+            f.close()
+    
