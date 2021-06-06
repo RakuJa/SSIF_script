@@ -1,7 +1,7 @@
 
 # SADA_suite
 
-A suite collecting various script usefull for daily activities ranging from file management to web scraping. Usefull for everyone that struggles with this and doesn't want to use sites with tons of ads and/or premium features.
+A suite collecting various script usefull for daily activities ranging from file management to web scraping. Usefull for anyone that struggles with this and doesn't want to use sites with tons of ads and/or premium features.
 
 
 ## Acknowledgements
