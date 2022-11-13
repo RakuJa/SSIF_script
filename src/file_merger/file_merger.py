@@ -66,9 +66,9 @@ def take_output_file_name() -> str:
 def order_files(file_list: iter) -> List:
     print("The current print order is as follows: ")
     i = 0
-    ordered_list: List = []
-    for file in file_list:
-        ordered_list.append(file)
+    ordered_list: List = list(file_list)
+    ordered_list.sort()
+    for file in ordered_list:
         print(f"[{i}]: {file}")
         i += 1
     result = input(
