@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import List
 
 from PyPDF2 import PdfFileMerger
 from pathvalidate import validate_filepath, ValidationError
@@ -62,8 +63,33 @@ def take_output_file_name() -> str:
                 print(f"\nEncountered an error while parsing the given path: {e}")
 
 
+def order_files(file_list: iter) -> List:
+    print("The current print order is as follows: ")
+    i = 0
+    ordered_list: List = []
+    for file in file_list:
+        ordered_list.append(file)
+        print(f"[{i}]: {file}")
+        i += 1
+    result = input(
+        "If you wish to change the order enter the list"
+        " of number separated by ',' ex: 1,2,3,4 otherwise"
+        " if the order is okay enter empty line \n"
+    )
+
+    number_list = result.split(",")
+    if not number_list:
+        return ordered_list
+    try:
+        return [ordered_list[int(number)] for number in number_list]
+    except ValueError as e:
+        print(e)
+        return ordered_list
+
+
 def start():
-    file_list = take_file_input()
+    file_list = order_files(take_file_input())
+
     merger = PdfFileMerger()
     for pdf in file_list:
         merger.append(pdf)

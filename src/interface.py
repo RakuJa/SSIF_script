@@ -4,11 +4,11 @@ import os
 def bordered(text):
     lines = text.splitlines()
     width = max(len(s) for s in lines)
-    res = ['┌' + '─' * width + '┐']
+    res = ["┌" + "─" * width + "┐"]
     for s in lines:
-        res.append('│' + (s + ' ' * width)[:width] + '│')
-    res.append('└' + '─' * width + '┘')
-    return '\n'.join(res)
+        res.append("│" + (s + " " * width)[:width] + "│")
+    res.append("└" + "─" * width + "┘")
+    return "\n".join(res)
 
 
 def print_file(file_name):
