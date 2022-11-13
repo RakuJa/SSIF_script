@@ -1,0 +1,6 @@
+-r requirements.txt
+
+black~=22.10.0
+flake8~=5.0.4
+bandit~=1.7.4
+pre-commit~=2.20.0
