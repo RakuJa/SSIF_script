@@ -15,10 +15,10 @@ def pdf_to_text(file_name) -> str:
     from pdfminer.layout import LAParams
     import io
 
-    fp = open(file_name, 'rb')
+    fp = open(file_name, "rb")
     rsrcmgr = PDFResourceManager()
     retstr = io.StringIO()
-    codec = 'utf-8'
+    codec = "utf-8"
     laparams = LAParams()
     device = TextConverter(rsrcmgr, retstr, codec=codec, laparams=laparams)
     # Create a PDF interpreter object.
@@ -50,21 +50,21 @@ def parse_txt_data(data, string_to_search) -> list:
 
 
 def parse_txt(file_name, string_to_search) -> list:
-    with open(file_name, 'r', encoding='utf-8') as f:
+    with open(file_name, "r", encoding="utf-8") as f:
         data = f.readlines()
         tmp = parse_txt_data(data, string_to_search)
         return tmp
 
 
 def check_extension(file_name, string_to_search) -> list:
-    if file_name.lower().endswith('.txt'):
+    if file_name.lower().endswith(".txt"):
         return parse_txt(file_name, string_to_search)
-    if file_name.lower().endswith('.pdf'):
+    if file_name.lower().endswith(".pdf"):
         return parse_pdf(file_name, string_to_search)
 
 
 def check_file_validity(file_name) -> bool:
-    with open(file_name, 'r', encoding='utf-8'):
+    with open(file_name, "r", encoding="utf-8"):
         return True
     return False
 
@@ -96,14 +96,18 @@ def take_file_input() -> list:
     return file_list
 
 
-def write_info_to_file(info_string, flattened_list, file_name="results.txt", separator=' \n') -> bool:
-    with open(file_name, 'a') as f:
+def write_info_to_file(
+    info_string, flattened_list, file_name="results.txt", separator=" \n"
+) -> bool:
+    with open(file_name, "a") as f:
         print(info_string, file=f)
         print(*flattened_list, sep=separator, file=f)
 
 
 def print_instructions():
-    text = "[1] Tutorial \n" + "[2] Continua esecuzione \n" + "[7] Credits   [9] Exit \n"
+    text = (
+        "[1] Tutorial \n" + "[2] Continua esecuzione \n" + "[7] Credits   [9] Exit \n"
+    )
     print(interface.bordered(text))
 
 
@@ -117,20 +121,20 @@ def start():
     keep_asking_input = True
     while keep_asking_input:
         choice = require_input()
-        if choice == '1' or choice == 'TUTORIAL':
+        if choice == "1" or choice == "TUTORIAL":
             interface.print_file(tutorial_name)
-        elif choice == '2' or choice == 'CONTINUE':
+        elif choice == "2" or choice == "CONTINUE":
             keep_asking_input = False
-        elif choice == '7' or choice == 'CREDITS':
+        elif choice == "7" or choice == "CREDITS":
             print("https://github.com/RakuJa")
-        elif choice == '9' or choice == 'EXIT':
+        elif choice == "9" or choice == "EXIT":
             sys.exit()
 
     options = input("Enter options like this : -v -f or press enter")
 
-    write_to_file = options.find('-f') != -1
+    write_to_file = options.find("-f") != -1
 
-    verbose = options.find('-v') != -1
+    verbose = options.find("-v") != -1
 
     file_list = take_file_input()
     to_search = input("Enter string to search ")
@@ -149,15 +153,22 @@ def start():
         print("\n" + "Search over........." + "\n")
 
     flattened_list = list(chain(*occurrences_list))
-    prepare_string = "Found in " + str(len(occurrences_list)) + " files \n" + "Found " + str(
-        len(flattened_list)) + " occurrences of the string \n" + "Here's the list \n"
+    prepare_string = (
+        "Found in "
+        + str(len(occurrences_list))
+        + " files \n"
+        + "Found "
+        + str(len(flattened_list))
+        + " occurrences of the string \n"
+        + "Here's the list \n"
+    )
     print(prepare_string)
-    print(*flattened_list, sep=' \n')
+    print(*flattened_list, sep=" \n")
 
     if write_to_file:
         write_info_to_file(prepare_string, flattened_list)
 
     x = input(" Would you like to restart the script? Y/N")
     if x == "Y" or x == "y":
-        os.startfile(__file__)
+        os.startfile(__file__)  # nosec
         sys.exit()
