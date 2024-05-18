@@ -1,6 +1,9 @@
 -r requirements.txt
 
-black~=22.10.0
-flake8~=5.0.4
-bandit~=1.7.4
-pre-commit~=2.20.0
+ruff~=0.4.4
+black~=24.4.2
+pre-commit~=3.7.1
+
+mypy~=1.10.0
+
+vulture~=2.11

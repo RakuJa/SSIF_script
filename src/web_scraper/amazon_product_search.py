@@ -1,21 +1,20 @@
 import os
 import sys
-from bs4 import BeautifulSoup
-import requests_random_user_agent
 
 # This library will randomize user agent, don't delete
-
 import certifi
+import requests_random_user_agent
+from bs4 import BeautifulSoup
+from requests import Response
 
 from src.web_scraper.connection_tools import download_page
 
-
-requests_random_user_agent
+_ = requests_random_user_agent
 BASE_URL_LIST = ["https://www.amazon.it/s?k="]
 os.environ["REQUESTS_CA_BUNDLE"] = certifi.where()
 
 
-def scrape_html(page) -> dict:
+def scrape_html(page: Response) -> dict:
     """
     This method will get name, price and currency tag from html
     :param page: the html page to scrape, already downloaded
@@ -26,15 +25,19 @@ def scrape_html(page) -> dict:
 
     # gets item name list
     item_found = soup.findAll(
-        "span", {"class": "a-size-base-plus a-color-base a-text-normal"}
+        "span",
+        {"class": "a-size-base-plus a-color-base a-text-normal"},
     )
     # gets item price list
     price_found = soup.findAll("span", {"class": "a-price-whole"})
     # gets item currency list
     currency_found = soup.findAll("span", {"class": "a-price-symbol"})
     item_dictionary = {}
-    for (curr_name, curr_price, curr_currency) in zip(
-        item_found, price_found, currency_found
+    for curr_name, curr_price, curr_currency in zip(
+        item_found,
+        price_found,
+        currency_found,
+        strict=False,
     ):
         # gets name, price and currency strings
         name = curr_name.get_text()
@@ -46,7 +49,7 @@ def scrape_html(page) -> dict:
     return item_dictionary
 
 
-def print_dictionary(dictionary) -> None:
+def print_dictionary(dictionary: dict) -> None:
     """
     Prints a dictionary row by row as follows, key : value
     :param dictionary: dictionary to print out
@@ -59,14 +62,14 @@ def print_dictionary(dictionary) -> None:
         print(item + " : " + price + " " + currency)
 
 
-def start():
+def start() -> None:
     while True:
         name = input("Enter product to search for : ")
         product_list = name.split()
         result_string = product_list[0]
         product_list.remove(product_list[0])
         for substring in product_list:
-            result_string += str(str("+") + str(substring))
+            result_string += str("+" + str(substring))
 
         full_url = BASE_URL_LIST[0] + result_string
 

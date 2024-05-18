@@ -1,18 +1,35 @@
-import os
+import logging
 import sys
 import time
+from http import HTTPStatus
+from pathlib import Path
 
 import requests
 from bs4 import BeautifulSoup
 
-FOLDER = "data"
-BASE_URL = "https://www.math.unipd.it/"
-REMOTE_FILE_PATH = os.path.join(FOLDER, "temp.ignore")
-BLACKLIST_PATH_CHAR = ["*", ".", "/", "'", "[", "]", ":", ";", "|", ",", "<", ">"]
-WHITELISTED_CHAR = "_"
+FOLDER: str = "data"
+BASE_URL: str = "https://www.math.unipd.it/"
+REMOTE_FILE_PATH: Path = Path(FOLDER) / "temp.ignore"
+BLACKLIST_PATH_CHAR: list[str] = [
+    "*",
+    ".",
+    "/",
+    "'",
+    "[",
+    "]",
+    ":",
+    ";",
+    "|",
+    ",",
+    "<",
+    ">",
+]
+WHITELISTED_CHAR: str = "_"
+
+logger = logging.getLogger(__name__)
 
 
-def start():
+def start() -> None:
     minutes_to_wait = 0
     site = input("Input full url: ")
 
@@ -28,17 +45,17 @@ def start():
     local_file_name = local_file_name + ".ignore"
 
     # Create valid path to folder
-    local_file_path = os.path.join(FOLDER, local_file_name)
+    local_file_path: Path = Path(FOLDER) / local_file_name
     try:
         default_folder_setup(local_file_path)
     except (OSError, NotADirectoryError) as e:
         print(e)
     keep_searching = input(
-        "Do you want to keep searching for differences every n minutes? Y/N :"
+        "Do you want to keep searching for differences every n minutes? Y/N :",
     )
     if keep_searching.upper() == "Y":
         minutes_to_wait = int(
-            input("Enter a number for the minutes to wait for update: ")
+            input("Enter a number for the minutes to wait for update: "),
         )
 
     while True:
@@ -51,23 +68,23 @@ def start():
             continue
         # End of data folder checks and/or creation
 
-        page = requests.get(site)
+        page = requests.get(site, timeout=60)
 
         print(page.status_code)
-        if page.status_code == 200:
+        if page.status_code == HTTPStatus.OK:
             # 200 = ok, Profile found
             print("Site found, extrapolating content.. \n")
-        if page.status_code == 404:
+        if page.status_code == HTTPStatus.NOT_FOUND:
             print("Site not found..  \n")
 
         soup = BeautifulSoup(page.content, "html.parser")
 
         remote_site: str = str(soup)
-        with open(REMOTE_FILE_PATH, "w") as f:
+        with REMOTE_FILE_PATH.open("w") as f:
             f.write(remote_site)
 
-        if os.stat(local_file_path).st_size == 0:
-            with open(local_file_path, "w") as f:
+        if local_file_path.stat().st_size == 0:
+            with local_file_path.open("w") as f:
                 f.write(remote_site)
 
         diff: str = check_file_diff(local_file_path, REMOTE_FILE_PATH)
@@ -78,12 +95,12 @@ def start():
             print(diff)
             user_input = input("Update local site version? Y/N : ")
             if user_input.upper() == "Y":
-                with open(local_file_path, "w") as f:
+                with local_file_path.open("w") as f:
                     f.write(remote_site)
 
         if minutes_to_wait != 0:
             seconds = minutes_to_wait * 60
-            print("Waiting %s minutes before next iteration" % seconds)
+            print(f"Waiting {minutes_to_wait} minutes before next iteration")
             time.sleep(seconds)
         else:
             user_input = input("Search again? Y/N : ")
@@ -91,35 +108,36 @@ def start():
                 sys.exit()
 
 
-def check_file_diff(first_file: str, second_file: str) -> str:
-    with open(first_file, "r") as file1:
-        with open(second_file, "r") as file2:
-            diff = set(file1).symmetric_difference(file2)
-
-    diff.discard("\n")
-    diff = ", ".join(diff)
-    return diff
+def check_file_diff(first_file: Path, second_file: Path) -> str:
+    with first_file.open() as file1, second_file.open() as file2:
+        diff = set(file1).symmetric_difference(file2)
+        diff.discard("\n")
+    return ", ".join(diff)
 
 
-def default_folder_setup(local_file_path: str) -> None:
-    if os.path.isfile(FOLDER):
+def default_folder_setup(local_file_path: Path) -> None:
+    folder_path = Path(FOLDER)
+
+    if folder_path.is_file():
         try:
-            os.remove(FOLDER)
+            folder_path.unlink()
         except OSError:
-            print("Could not delete data file")
-            raise NotADirectoryError(
+            error: str = (
                 "Default data path already exists as a file and"
                 " we encountered errors while deleting it, delete it!"
             )
-    if not os.path.exists(FOLDER):
+            logger.warning(error)
+            raise NotADirectoryError(error) from None
+    if not folder_path.exists():
         try:
-            os.mkdir(FOLDER)
+            folder_path.mkdir()
         except OSError:
-            print("Creation of the directory has failed")
-            raise OSError("Creation of default data directory has failed")
-    # If path is a directory i delete it
-    if os.path.exists(local_file_path) and not os.path.isfile(local_file_path):
-        os.rmdir(local_file_path)
-    if not os.path.exists(local_file_path):
-        with open(local_file_path, "w") as f:
+            error: str = "Creation of default data directory has failed"
+            logger.warning(error)
+            raise OSError(error) from None
+    # If path is a directory we delete it
+    if local_file_path.exists() and not local_file_path.is_file():
+        local_file_path.rmdir()
+    if not local_file_path.exists():
+        with local_file_path.open("w") as f:
             f.close()

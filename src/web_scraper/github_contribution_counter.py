@@ -1,31 +1,32 @@
+import logging
 import sys
+from http import HTTPStatus
 
 import requests
 from bs4 import BeautifulSoup
 
 from src.SSIF_script import SSIF_script
 
-BASE_URL = "https://github.com/"
-BLACKLIST = ["Learn how we count contributions"]
+BASE_URL: str = "https://github.com/"
+BLACKLIST: list[str] = ["Learn how we count contributions"]
 
 
-def start():
+def start() -> None:
     while True:
         name = input("Enter account name to search for contributions : ")
         full_url = BASE_URL + name
 
-        page = requests.get(full_url)
+        page = requests.get(full_url, timeout=60)
 
-        print(page.status_code)
-        if page.status_code == 200:
+        if page.status_code == HTTPStatus.OK:
             # 200 = ok, Profile found
-            print("Profile found, extrapolating content.. \n")
-        if page.status_code == 404:
-            print("Profile not found..  \n")
+            logging.debug("Profile found, extrapolating content.. \n")
+        elif page.status_code == HTTPStatus.NOT_FOUND:
+            logging.warning("Profile not found..  \n")
 
         soup = BeautifulSoup(page.content, "html.parser")
         text = soup.findAll(text=True)
-        contribution_list = SSIF_script.parse_txt_data(text, "contributions")
+        contribution_list = SSIF_script.parse_txt_lines(text, "contributions")
         for element in contribution_list:
             for blacklist_el in BLACKLIST:
                 if blacklist_el in element:
